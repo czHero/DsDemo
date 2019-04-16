@@ -4,6 +4,7 @@
     {% load staticfiles %}
     <meta charset="UTF-8">
     <title>Datatable Demo</title>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="{% static 'datatables-1.10.13/media/css/dataTables.bootstrap.min.css' %}">
 </head>
 <body>
@@ -12,12 +13,9 @@
     <table class="table table-striped table-hover table-bordered NoNewline" id="table" cellspacing="0" width="100%">
         <thead>
         <tr>
-            <th title="name"></th>
-            <th title="gender"></th>
-            <th title="birth"></th>
-            <th title="session"></th>
-            <th title="class"></th>
-            <th title="name">...</th>
+            <th title="id" data="id"></th>
+            <th title="组名称" data="name"></th>
+            <th title="parent_id" data="parent_id"></th>
         </tr>
         </thead>
         <tbody>
@@ -32,6 +30,10 @@
 <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 
 <script>
+    $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        dataType: "json"
+    });
     $(document).ready(function () {
 
         initDatatable();
@@ -40,10 +42,10 @@
     function initDatatable() {
         mytable = initDataTable("#table", {
             "ajax": {
-                url: "{% url 'student_retrieve' %}",
-                "dataSrc": "data",
+                url: "{% url 'group_lists' %}",
                 "type": "POST",
                 "data": function () {
+                    // 传参数，过滤条件
                     return {
                         "p_sts": $('#select_sts').val(),
                         "workflow_id": $('#select_workflow').val(),

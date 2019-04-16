@@ -1,16 +1,67 @@
+import datetime
 import json
 
 from django.forms import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render
-from demo.models import Student
+from demo.models import Student, Group
 
 
-# Create your views here.
+class CJsonEncoder(json.JSONEncoder):
+	def default(self, obj):
+		if isinstance(obj, datetime.datetime):
+			return obj.strftime('%Y-%m-%d %H:%M:%S')
+		elif isinstance(obj, datetime.date):
+			return obj.strftime('%Y-%m-%d')
+		else:
+			return json.JSONEncoder.default(self, obj)
+
+
+def GetJsonResponse(dictObject, status=200):
+	return HttpResponse(json.dumps(dictObject, ensure_ascii=False, cls=CJsonEncoder).encode("utf-8"), charset="utf-8",
+	                    status=status)
+
+
+def build_tree(list):
+	"""
+	将model 转成输
+	:param list:
+	:return:
+	"""
+	tree = []
+	all_node = {}
+	# 转成[K，V]键值对
+	for m in list:
+		t = model_to_dict(m)
+		t['type'] = 'leaf'
+		all_node[m.id] = t
+	# 构建树
+	for (k, node) in all_node.items():
+		if node['parent_id'] == 0:
+			tree.append(node)
+		else:
+			if node['parent_id'] in all_node:
+				parent = all_node[node['parent_id']]
+				if 'children' not in parent:
+					parent['children'] = []
+				parent['children'].append(node)
+				parent['type'] = 'node'
+	return tree
 
 
 def group(request):
 	return render(request, 'group.html')
+
+
+def lists(request):
+	_group = Group.objects.all()
+	return GetJsonResponse({'result': 'OK', 'data': [model_to_dict(g) for g in _group]})
+
+
+def tree(request):
+	_group = Group.objects.all()
+	_group = build_tree(_group)
+	return GetJsonResponse({'result': 'OK', 'data': _group})
 
 
 def create(request):
@@ -50,7 +101,3 @@ def delete(request):
 	if password == passport:
 		Student.objects.get(id=stu_id).delete()
 	return HttpResponse(json.dumps({'result': 'ok'}), status=200)
-
-
-
-
