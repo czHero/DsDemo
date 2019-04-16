@@ -57,6 +57,7 @@ def group(request):
 
 
 def lists(request):
+	# post获取的内部变量全部以下划线开头
 	_group = Group.objects.all()
 	return GetJsonResponse({'result': 'OK', 'data': [model_to_dict(g) for g in _group]})
 
@@ -68,42 +69,33 @@ def tree(request):
 
 
 def create(request):
-	name = request.POST.get('name')
-	gen = request.POST.get('gender')
-	birth = request.POST.get('birth')
-	sess = request.POST.get('session')
-	clas = request.POST.get('class')
-	
-	Student(name=name, gender=gen, birth=birth, session=sess, class_s=clas).save()
+	_name = request.POST.get('p_name')
+	_order_id = request.POST.get('p_order_id')
+	_parent_id = request.POST.get('p_parent_id')
+	Student(name=_name, order_id=_order_id, parent_id=_parent_id).save()
 	return HttpResponse(json.dumps({'result': 'ok'}), status=200)
 
 
 def retrieve(request):
-	stu_id = request.POST.get('id')
-	data = Student.objects.get(id=stu_id)
-	data = model_to_dict(data)
-	return HttpResponse(json.dumps(data), status=200)
+	_id = request.POST.get('p_id')
+	data = Student.objects.get(id=_id)
+	return GetJsonResponse({'result': 'OK', 'data': model_to_dict(data)})
 
 
 def update(request):
-	stu_id = request.POST.get('id')
-	name = request.POST.get('name')
-	gen = request.POST.get('gender')
-	birth = request.POST.get('birth')
-	sess = request.POST.get('session')
-	clas = request.POST.get('class')
+	_id = request.POST.get('p_id')
+	_name = request.POST.get('p_name')
+	_order_id = request.POST.get('p_order_id')
+	_parent_id = request.POST.get('p_parent_id')
 	
-	Student.objects.filter(id=stu_id).update(name=name, gender=gen, birth=birth, session=sess, class_s=clas)
-	return HttpResponse(json.dumps({'result': 'ok'}), status=200)
+	Student.objects.filter(id=_id).update(name=_name, order_id=_order_id, parent_id=_parent_id)
+	return GetJsonResponse({'result': 'OK'})
 
 
 def delete(request):
-	stu_id = request.POST.get('id')
-	password = request.POST.get('password')
-	passport = 'demo'
-	if password == passport:
-		Student.objects.get(id=stu_id).delete()
-	return HttpResponse(json.dumps({'result': 'ok'}), status=200)
+	_id = request.POST.get('p_id')
+	Student.objects.filter(id=id).update(sts='INVALID')
+	return GetJsonResponse({'result': 'OK'})
 
 
 class PageGroup(BaseDatatableView):
