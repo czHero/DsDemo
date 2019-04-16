@@ -4,6 +4,7 @@
     {% load staticfiles %}
     <meta charset="UTF-8">
     <title>Datatable Demo</title>
+    <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="{% static 'datatables-1.10.13/media/css/dataTables.bootstrap.min.css' %}">
 </head>
@@ -16,6 +17,7 @@
         <tr>
             <th title="id" data="id"></th>
             <th title="组名称" data="name"></th>
+            <th title="排序" data="order_id"></th>
             <th title="parent_id" data="parent_id"></th>
             <th title="编辑" data="id" width="100px"><a class="btn btn-sm blue tab_edit" param="data">确认</a></th>
         </tr>
@@ -27,12 +29,31 @@
 </div>
 
 <div>
-    <h1>datatables-后段分页</h1>
+    <h1>datatables-后端分页</h1>
     <table class="table table-striped table-hover table-bordered NoNewline" id="table1" cellspacing="0" width="100%">
         <thead>
         <tr>
             <th title="id" data="id"></th>
             <th title="组名称" data="name"></th>
+            <th title="排序" data="order_id"></th>
+            <th title="parent_id" data="parent_id"></th>
+            <th title="编辑" data="id" width="100px"><a class="btn btn-sm blue tab_edit" param="data">确认</a></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h1>datatables-treegrid</h1>
+    <table class="table table-striped table-hover table-bordered NoNewline" id="table2" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th></th>
+            <th title="组名称" data="name"></th>
+            <th title="排序" data="order_id"></th>
             <th title="parent_id" data="parent_id"></th>
             <th title="编辑" data="id" width="100px"><a class="btn btn-sm blue tab_edit" param="data">确认</a></th>
         </tr>
@@ -47,6 +68,7 @@
 <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'datatables-1.10.13/media/js/jquery.dataTables.min.js' %}"></script>
 <script rel="text/javascript" href="{% static 'datatables-1.10.13/media/js/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'datatables-1.10.13/extensions/TreeGrid/dataTables.treeGrid.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 
 <script>
@@ -56,10 +78,10 @@
     });
     $(document).ready(function () {
 
-        initDatatable();
+        init_datatable();
     });
 
-    function initDatatable() {
+    function init_datatable() {
         mytable = initDataTable("#table", {
             "ajax": {
                 url: "{% url 'group_lists' %}",
@@ -68,8 +90,6 @@
                     // 传参数，过滤条件
                     return {
                         "p_sts": $('#select_sts').val(),
-                        "workflow_id": $('#select_workflow').val(),
-                        "batch_id": $('#select_batch').val()
                     };
                 },
             },
@@ -85,6 +105,60 @@
             alert(id);
         });
 
+        mytable1 = initDataTable("#table1", {
+            "ajax": {
+                url: "{% url 'group_page' %}",
+                "type": "POST",
+                "data": function () {
+                    // 传参数，过滤条件
+                    return {
+                        "p_sts": 'VALID',
+                    };
+                },
+            },
+            searching: true,
+            processing: true,
+            serverSide: true,
+        });
+        $("#table1").delegate(".tab_edit", "click", function () {
+            var id = $(this).attr("param");
+            alert(id);
+        });
+
+        mytable2 = initDataTable("#table2", {
+            "ordering": false, //禁用排序
+            "searching": false,
+            "ajax": {
+                url: "{% url 'group_tree' %}",
+                "type": "POST",
+                "data": function () {
+                    // 传参数，过滤条件
+                    return {
+                        "p_sts": $('#select_sts').val(),
+                    };
+                },
+            },
+            'treeGrid': {
+                'left': 15,
+                'expandIcon': '<span><i class="fa fa-plus-square"></i></span>',
+                'collapseIcon': '<span><i class="fa fa-minus-square"></i></span>'
+            },
+            columns: [{
+                title: '',
+                target: 0,
+                className: 'treegrid-control',
+                data: function (item) {
+                    if (item.children) {
+                        return '<span><i class="fa fa-plus-square"></i></span>';
+                    }
+                    return '';
+                }
+            }],
+        });
+        $("#table2").delegate(".tab_edit", "click", function () {
+            var id = $(this).attr("param");
+            alert(id);
+        });
     }
 
 

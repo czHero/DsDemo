@@ -21,6 +21,7 @@ class Group(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=200)
 	parent_id = models.FloatField()
+	order_id = models.FloatField()
 	sts = models.CharField(max_length=20, default='VALID')
 	
 	class Meta:
