@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -10,7 +11,17 @@ class Student(models.Model):
 	birth = models.DateField()
 	session = models.CharField(max_length=4)  # 某届
 	class_s = models.CharField(max_length=4)
-	# first_name
-	# last_name
-	# middle_name
-	# full_name(foreign_version)
+	
+	class Meta:
+		managed = True
+		db_table = 'student'
+
+
+class Group(models.Model):
+	id = models.AutoField(primary_key=True)
+	name = models.CharField(max_length=20)
+	parent_id = models.FloatField()
+	
+	class Meta:
+		managed = True
+		db_table = 'group'
