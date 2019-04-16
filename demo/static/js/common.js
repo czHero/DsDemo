@@ -8,9 +8,6 @@ function ajax(settings) {
         dataType: "json",
         success: function (data) {
         },
-        error: function (data) {
-            alert(data.error);
-        },
         beforeSend: function (XMLHttpRequest) {
             XMLHttpRequest.setRequestHeader('X-CSRFtoken', $.cookie("csrftoken"))
         },

@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
-from demo.models import Student, Group
+from demo.models import Group, Group
 
 
 class CJsonEncoder(json.JSONEncoder):
@@ -72,13 +72,13 @@ def create(request):
 	_name = request.POST.get('p_name')
 	_order_id = request.POST.get('p_order_id')
 	_parent_id = request.POST.get('p_parent_id')
-	Student(name=_name, order_id=_order_id, parent_id=_parent_id).save()
+	Group(name=_name, order_id=_order_id, parent_id=_parent_id).save()
 	return HttpResponse(json.dumps({'result': 'ok'}), status=200)
 
 
 def retrieve(request):
 	_id = request.POST.get('p_id')
-	data = Student.objects.get(id=_id)
+	data = Group.objects.get(id=_id)
 	return GetJsonResponse({'result': 'OK', 'data': model_to_dict(data)})
 
 
@@ -88,13 +88,13 @@ def update(request):
 	_order_id = request.POST.get('p_order_id')
 	_parent_id = request.POST.get('p_parent_id')
 	
-	Student.objects.filter(id=_id).update(name=_name, order_id=_order_id, parent_id=_parent_id)
+	Group.objects.filter(id=_id).update(name=_name, order_id=_order_id, parent_id=_parent_id)
 	return GetJsonResponse({'result': 'OK'})
 
 
 def delete(request):
 	_id = request.POST.get('p_id')
-	Student.objects.filter(id=id).update(sts='INVALID')
+	Group.objects.filter(id=id).update(sts='INVALID')
 	return GetJsonResponse({'result': 'OK'})
 
 

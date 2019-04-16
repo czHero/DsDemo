@@ -65,11 +65,55 @@
     </table>
 </div>
 <div>
+    <h1>form-表单提交</h1>
+    <form id="form" class="form-horizontal" style="width: 450px">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-sm-4 col-md-4 control-label">组id<span class="required">
+										* </span></div>
+                <div class="col-sm-8 col-md-8">
+                    <input id="id" name="p_id">
+                    <input type="button" id="btnRetrieve" value="加载">
+                </div>
+            </div>
 
+            <div class="form-group">
+                <div class="col-sm-4 col-md-4 control-label">组名称<span class="required">
+										* </span></div>
+                <div class="col-sm-8 col-md-8">
+                    <input name="p_name">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4 col-md-4 control-label">排序<span class="required">
+										* </span></div>
+                <div class="col-sm-8 col-md-8">
+                    <input name="p_order_id">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4 col-md-4 control-label">父组织id<span class="required">
+										* </span></div>
+                <div class="col-sm-8 col-md-8">
+                    <input name="p_parent_id">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12 col-md-12">
+                    <input type="button" id="btnCreate" value="新建">
+                </div>
+                <div class="col-sm-8 col-md-8">
+                    <input type="button" id="btnUpdate" value="修改">
+                </div>
+            </div>
+        </div>
+
+    </form>
 </div>
 
 
 <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'jquery.cookie.js' %}"></script>
 <script type="text/javascript" src="{% static 'datatables-1.10.13/media/js/jquery.dataTables.min.js' %}"></script>
 <script rel="text/javascript" href="{% static 'datatables-1.10.13/media/js/dataTables.bootstrap.min.js' %}"></script>
 <script src="{% static 'datatables-1.10.13/extensions/TreeGrid/dataTables.treeGrid.js' %}"></script>
@@ -83,9 +127,74 @@
         dataType: "json"
     });
     $(document).ready(function () {
-
+        init_button();
         init_datatable();
     });
+
+    function init_button() {
+        $('#btnCreate').click(function () {
+
+            $('#btnCreate').attr("disabled", true);
+            ajax({
+                url: "{% url 'group_create' %}",
+                dataType: 'POST',
+                // 使用表单序列化
+                data: $('#form').serialize(),//额外参数使用 + "&" + $.param({p_id: p_id})
+                success: function (data) {
+                    // 重新加载表格
+                    mytable.ajax.reload();
+                    mytable1.ajax.reload();
+                    mytable2.ajax.reload();
+                    alert('添加成功');
+                },
+                complete: function () {
+                    $('#btnCreate').removeAttr("disabled");
+                }
+            });
+        });
+        $('#btnUpdate').click(function () {
+
+            $('#btnUpdate').attr("disabled", true);
+            ajax({
+                url: "{% url 'group_update' %}",
+                dataType: 'POST',
+                // 使用表单序列化
+                data: $('#form').serialize(),//额外参数使用 + "&" + $.param({p_id: p_id})
+                success: function (data) {
+                    // 重新加载表格
+                    mytable.ajax.reload();
+                    mytable1.ajax.reload();
+                    mytable2.ajax.reload();
+                    alert('更新成功');
+                },
+                complete: function () {
+                    $('#btnUpdate').removeAttr("disabled");
+                }
+            });
+        });
+
+        $('#btnRetrieve').click(function () {
+
+            $('#btnRetrieve').attr("disabled", true);
+            ajax({
+                url: "{% url 'group_retrieve' %}",
+                dataType: 'POST',
+                // 使用表单序列化
+                data: $.param({p_id: $('#id').val()}),
+                success: function (data) {
+                    // 重新加载表格
+                    mytable.ajax.reload();
+                    mytable1.ajax.reload();
+                    mytable2.ajax.reload();
+                    alert('更新成功');
+                },
+                complete: function () {
+                    $('#btnRetrieve').removeAttr("disabled");
+                }
+            });
+        });
+
+    }
 
     function init_datatable() {
         mytable = initDataTable("#table", {
