@@ -11,5 +11,5 @@ url_student = [
 ]
 
 url_demo = [
-    path('demo/', include()),
+    path('student/', include(url_student)),
 ]
