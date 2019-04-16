@@ -7,6 +7,7 @@
     <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="{% static 'datatables-1.10.13/media/css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'datatables-1.10.13/extensions/Select/css/select.bootstrap.min.css' %}">
 </head>
 <body>
 
@@ -15,7 +16,7 @@
     <table class="table table-striped table-hover table-bordered NoNewline" id="table" cellspacing="0" width="100%">
         <thead>
         <tr>
-            <th title="id" data="id"></th>
+            <th title="" class="select-checkbox" orderable="false" width="60px" data="id">&nbsp;</th>
             <th title="组名称" data="name"></th>
             <th title="排序" data="order_id"></th>
             <th title="parent_id" data="parent_id"></th>
@@ -69,6 +70,8 @@
 <script type="text/javascript" src="{% static 'datatables-1.10.13/media/js/jquery.dataTables.min.js' %}"></script>
 <script rel="text/javascript" href="{% static 'datatables-1.10.13/media/js/dataTables.bootstrap.min.js' %}"></script>
 <script src="{% static 'datatables-1.10.13/extensions/TreeGrid/dataTables.treeGrid.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'datatables-1.10.13/extensions/Select/js/dataTables.select.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 
 <script>
