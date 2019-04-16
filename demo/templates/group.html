@@ -10,12 +10,14 @@
 <body>
 
 <div>
+    <h1>datatables-前端分页</h1>
     <table class="table table-striped table-hover table-bordered NoNewline" id="table" cellspacing="0" width="100%">
         <thead>
         <tr>
             <th title="id" data="id"></th>
             <th title="组名称" data="name"></th>
             <th title="parent_id" data="parent_id"></th>
+            <th title="编辑" data="id" width="100px"><a class="btn btn-sm blue tab_edit" param="data">确认</a></th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +25,24 @@
         </tbody>
     </table>
 </div>
+
+<div>
+    <h1>datatables-后段分页</h1>
+    <table class="table table-striped table-hover table-bordered NoNewline" id="table1" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th title="id" data="id"></th>
+            <th title="组名称" data="name"></th>
+            <th title="parent_id" data="parent_id"></th>
+            <th title="编辑" data="id" width="100px"><a class="btn btn-sm blue tab_edit" param="data">确认</a></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
 
 <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'datatables-1.10.13/media/js/jquery.dataTables.min.js' %}"></script>
@@ -60,13 +80,9 @@
             "fontAllSelect": true,
             "dataTableName": 'mytable'
         });
-        $("#table").delegate(".tab_confirm", "click", function () {
-            var fund_id = $(this).attr("param");
-            var ret = confirm("确认资金已发放吗？");
-
-            if (ret == true) {
-                confirmFund(fund_id);
-            }
+        $("#table").delegate(".tab_edit", "click", function () {
+            var id = $(this).attr("param");
+            alert(id);
         });
 
     }

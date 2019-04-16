@@ -1,9 +1,12 @@
 import datetime
 import json
 
+from django.db.models import Q
 from django.forms import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render
+from django_datatables_view.base_datatable_view import BaseDatatableView
+
 from demo.models import Student, Group
 
 
@@ -101,3 +104,26 @@ def delete(request):
 	if password == passport:
 		Student.objects.get(id=stu_id).delete()
 	return HttpResponse(json.dumps({'result': 'ok'}), status=200)
+
+
+class PageGroup(BaseDatatableView):
+	model = Group
+	columns = ['id', 'name', 'full_name', 'parent_id']
+
+	# 获取初始查询
+	def get_initial_queryset(self):
+		# 获取ajax参数
+		sts = self._querydict.get('p_sts', None)
+		return self.model.objects.filter(sts=sts).order_by('order_id')
+
+	# 过滤查询
+	def filter_queryset(self, qs):
+		search = self.request.GET.get('search[value]', None)
+		if search:
+			q = Q(id__contains=search) | Q(name__contains=search) | Q(full_name__contains=search)
+			qs = qs.filter(q)
+		return qs
+
+	# 准备返回结果
+	def prepare_results(self, qs):
+		return [model_to_dict(q) for q in qs]
