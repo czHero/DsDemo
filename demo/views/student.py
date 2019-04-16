@@ -7,11 +7,11 @@ from demo.models import Student
 # Create your views here.
 
 
-def crud(request):
-	return render(request, 'crud.html')
+def student(request):
+	return render(request, 'student.html')
 
 
-def add(request):
+def create(request):
 	name = request.POST.get('name')
 	gen = request.POST.get('gender')
 	birth = request.POST.get('birth')
@@ -22,7 +22,7 @@ def add(request):
 	return HttpResponse(json.dumps({'result': 'ok'}), status=200)
 
 
-def fill(request):
+def retrieve(request):
 	stu_id = request.POST.get('id')
 	data = Student.objects.get(id=stu_id)
 	data = model_to_dict(data)
