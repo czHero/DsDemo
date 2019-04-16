@@ -137,7 +137,6 @@
             $('#btnCreate').attr("disabled", true);
             ajax({
                 url: "{% url 'group_create' %}",
-                dataType: 'POST',
                 // 使用表单序列化
                 data: $('#form').serialize(),//额外参数使用 + "&" + $.param({p_id: p_id})
                 success: function (data) {
@@ -157,7 +156,6 @@
             $('#btnUpdate').attr("disabled", true);
             ajax({
                 url: "{% url 'group_update' %}",
-                dataType: 'POST',
                 // 使用表单序列化
                 data: $('#form').serialize(),//额外参数使用 + "&" + $.param({p_id: p_id})
                 success: function (data) {
@@ -178,15 +176,13 @@
             $('#btnRetrieve').attr("disabled", true);
             ajax({
                 url: "{% url 'group_retrieve' %}",
-                dataType: 'POST',
                 // 使用表单序列化
                 data: $.param({p_id: $('#id').val()}),
                 success: function (data) {
-                    // 重新加载表格
-                    mytable.ajax.reload();
-                    mytable1.ajax.reload();
-                    mytable2.ajax.reload();
-                    alert('更新成功');
+                    // 使用name 或id进行赋值
+                    $("input[name='p_name']").val(data.data.name);
+                    $("input[name='p_parent_id']").val(data.data.parent_id);
+                    $("input[name='p_order_id']").val(data.data.order_id);
                 },
                 complete: function () {
                     $('#btnRetrieve').removeAttr("disabled");
@@ -200,7 +196,6 @@
         mytable = initDataTable("#table", {
             "ajax": {
                 url: "{% url 'group_lists' %}",
-                "type": "POST",
                 "data": function () {
                     // 传参数，过滤条件
                     return {
@@ -223,7 +218,6 @@
         mytable1 = initDataTable("#table1", {
             "ajax": {
                 url: "{% url 'group_page' %}",
-                "type": "POST",
                 "data": function () {
                     // 传参数，过滤条件
                     return {
