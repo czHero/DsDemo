@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Datatable Demo</title>
+    <link rel="stylesheet" href="{% static 'jquery.dataTables.css' %}">
+</head>
+<body>
+
+<div>
+    <table id="table" class="display">
+        <thead>
+        <tr>
+            <th>name</th>
+            <th>gender</th>
+            <th>birth</th>
+            <th>session</th>
+            <th>class</th>
+            <th>...</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript" src="{% static 'jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+    function initTable(){
+        $('#table').DataTable(
+            "ajax":{
+
+        }
+        )
+    }
+
+
+</script>
+
+</body>
+</html>
